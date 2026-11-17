@@ -98,9 +98,11 @@ button, select, input { font-family: inherit; }
 .no-rating { color: var(--text-sub); font-size: 0.9rem; margin: 0; }
 
 /* ---------- 感想のポップアップ ---------- */
+/* ポップアップを開いているあいだ、後ろのページを今の位置で固定する（top は app.js で指定） */
+body.scroll-locked { position: fixed; left: 0; right: 0; overflow: hidden; }
 .public-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
 .public-modal.show { display: flex; }
-.public-modal-content { background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+.public-modal-content { background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; overscroll-behavior: contain; }
 .public-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-sub); }
 .public-modal-content .liver-name { margin-bottom: 15px; }
 .public-modal-content h3 { color: var(--text-strong); }

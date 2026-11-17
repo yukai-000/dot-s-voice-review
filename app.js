@@ -424,6 +424,25 @@ document.addEventListener("click", e => {
 
 // ---------- ポップアップ ----------
 
+// ポップアップを開いているあいだ、後ろの一覧が動かないようにする
+// （iPhone の Safari でも止まるように、今の位置でページを固定して、閉じたら元の位置に戻す）
+let savedScrollY = null; // 固定する前のスクロール位置。null なら固定していない
+
+function lockScroll() {
+    if (savedScrollY !== null) return; // すでに固定中なら何もしない
+    savedScrollY = window.scrollY;
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.classList.add("scroll-locked");
+}
+
+function unlockScroll() {
+    if (savedScrollY === null) return;
+    document.body.classList.remove("scroll-locked");
+    document.body.style.top = "";
+    window.scrollTo(0, savedScrollY); // 開く前と同じ場所に戻す
+    savedScrollY = null;
+}
+
 function openModal(voice) {
     document.getElementById("pvTitle").textContent = voice.title;
     document.getElementById("pvLiver").textContent = `👤 ${voice.livers.join("、")}`;
@@ -437,10 +456,15 @@ function openModal(voice) {
     if (voice.updatedAt) dates.push(`更新日：${voice.updatedAt}`);
     document.getElementById("pvDates").textContent = dates.join("　");
     document.getElementById("publicVoiceModal").classList.add("show");
+    document.querySelector(".public-modal-content").scrollTop = 0; // 前に開いた感想の途中から始まらないように
+    lockScroll();
 }
 
 function closeModal() {
-    document.getElementById("publicVoiceModal").classList.remove("show");
+    const modal = document.getElementById("publicVoiceModal");
+    if (!modal.classList.contains("show")) return; // 開いていないときは何もしない
+    modal.classList.remove("show");
+    unlockScroll();
 }
 
 document.getElementById("closePublicModal").addEventListener("click", closeModal);
