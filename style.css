@@ -84,7 +84,7 @@ button, select, input { font-family: inherit; }
 /* ポップアップのタイトルと未聴の印を横に並べる */
 .modal-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 30px 10px 0; }
 .modal-title-row h3 { margin: 0; }
-/* ポップアップ一番下の登録日・更新日 */
+/* ポップアップ一番下の更新日 */
 .modal-dates { margin: 20px 0 0; font-size: 0.8rem; color: var(--text-sub); text-align: right; }
 .modal-dates:empty { display: none; }
 .has-review { display: block; margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }

@@ -31,7 +31,6 @@ const HEADER_ALIASES = {
     "詳細": "detail",     // ネタバレを含む詳しい感想
     "非公開": "isHidden",
     "更新日": "updatedAt",
-    "登録日": "createdAt",
     "名前": "name",       // livers シート
     "ふりがな": "furigana", // livers シート
 };
@@ -166,7 +165,6 @@ async function loadData() {
                     review: String(r.review ?? "").trim(),
                     detail: String(r.detail ?? "").trim(), // ネタバレを含む詳しい感想
                     listened: normalize(r.listenStatus) === "済", // 視聴済みなら true
-                    createdAt: normalize(r.createdAt), // 登録日（スプレッドシートの表示のまま）
                     updatedAt: normalize(r.updatedAt), // 更新日（スプレッドシートの表示のまま）
                     ratings,
                 };
@@ -462,11 +460,8 @@ function openModal(voice) {
     spoiler.classList.remove("open");
     document.getElementById("spoilerBtn").setAttribute("aria-expanded", "false");
     document.getElementById("pvDetail").textContent = voice.detail; // textContent で入れる（HTML として解釈させないため）
-    // 登録日・更新日は、入っているものだけ表示する
-    const dates = [];
-    if (voice.createdAt) dates.push(`登録日：${voice.createdAt}`);
-    if (voice.updatedAt) dates.push(`更新日：${voice.updatedAt}`);
-    document.getElementById("pvDates").textContent = dates.join("　");
+    // 一番下に更新日だけを表示する（入っていなければ何も出さない）
+    document.getElementById("pvDates").textContent = voice.updatedAt ? `更新日：${voice.updatedAt}` : "";
     document.getElementById("publicVoiceModal").classList.add("show");
     document.querySelector(".public-modal-content").scrollTop = 0; // 前に開いた感想の途中から始まらないように
     lockScroll();
