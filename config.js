@@ -14,5 +14,5 @@ window.SITE_CONFIG = {
   liversCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcj4Gpa4Ri2M8W18IPrBcwguKQ86gn9OSSKfwDv5aueZjMT7gRS-snaPKkdfZ0ToAkeN4phlysnpER/pub?gid=2&single=true&output=csv",
 
   // 「いいね」「気になる」の数を数える GAS（ウェブアプリ）の URL。空ならボタンを出さない
-  reactionsApiUrl: "",
+  reactionsApiUrl: "https://script.google.com/macros/s/AKfycbzasgHRfT8gGGx3mPT2phosoYOpIge3RWkxHRG2bSQRBqPKUug2xw0BtvBIQsg6ayprbA/exec",
 };
