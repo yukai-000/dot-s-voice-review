@@ -312,11 +312,10 @@ function closeOthers(selector) {
 }
 
 // カード1枚を作る（押すと感想のポップアップを開く）
-function createCard(voice, { showTitle = false } = {}) {
+function createCard(voice) {
     const card = document.createElement("button");
     card.className = "card";
     card.innerHTML = `
-        ${showTitle ? `<h4>${escapeHtml(voice.title)}</h4>` : ""}
         <div class="card-top">
             <p class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</p>
             ${voice.listened ? "" : UNLISTENED_BADGE}
@@ -354,10 +353,18 @@ function createAccordion(labelHtml, voices) {
     return wrap;
 }
 
-// タイトルの中の並べ方：視聴済みを上、未聴を下にして、それぞれ最初のライバーの五十音順
-function byListenedThenLiver(a, b) {
+// タイトルの中の並べ方
+// 評価の並び順を選んでいるときは、その評価が高い順を先にする。
+// それ以外（同じ評価のときも）は、視聴済みを上、未聴を下にして、それぞれ最初のライバーの五十音順
+function compareCards(a, b) {
+    if (sortKey && a.ratings[sortKey] !== b.ratings[sortKey]) return b.ratings[sortKey] - a.ratings[sortKey];
     if (a.listened !== b.listened) return a.listened ? -1 : 1;
     return sortName(a.livers[0] || "").localeCompare(sortName(b.livers[0] || ""), "ja");
+}
+
+// タイトルの中で、選んでいる評価のいちばん高い値（タイトルの並べ替えに使う）
+function topRating(voices) {
+    return Math.max(...voices.map(v => v.ratings[sortKey] || 0));
 }
 
 // タイトルごとにまとめて親要素に追加する
@@ -365,10 +372,10 @@ function appendTitles(parent, voices) {
     const groups = {};
     voices.forEach(v => { (groups[v.title] ||= []).push(v); });
     Object.keys(groups)
-        .sort((a, b) => a.localeCompare(b, "ja"))
+        .sort((a, b) => (sortKey ? topRating(groups[b]) - topRating(groups[a]) : 0) || a.localeCompare(b, "ja"))
         .forEach(title => {
             const label = `<span>🎤 ${escapeHtml(title)}</span><span class="count">${groups[title].length}件</span>`;
-            parent.appendChild(createAccordion(label, groups[title].sort(byListenedThenLiver)));
+            parent.appendChild(createAccordion(label, groups[title].sort(compareCards)));
         });
 }
 
@@ -379,23 +386,6 @@ function renderGallery() {
     document.querySelectorAll(".view-mode-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.view === viewMode));
 
     let voices = filteredVoices();
-
-    // 評価の並び順が選ばれているときは、評価が入っているボイスだけを高い順に並べる
-    if (sortKey) {
-        voices = voices.filter(v => v.ratings[sortKey] > 0)
-            .sort((a, b) => (b.ratings[sortKey] - a.ratings[sortKey]) || (b.releaseYear - a.releaseYear) || (b.releaseMonth - a.releaseMonth));
-        if (voices.length === 0) { showMessage("この評価が入っているボイスはまだありません。"); return; }
-
-        container.innerHTML = "";
-        const note = document.createElement("p");
-        note.className = "sort-note";
-        note.textContent = `${ratingStyle(sortKey).label}が入っているボイス ${voices.length}件`;
-        const grid = document.createElement("div");
-        grid.className = "card-grid";
-        voices.forEach(v => grid.appendChild(createCard(v, { showTitle: true })));
-        container.append(note, grid);
-        return;
-    }
 
     if (voices.length === 0) { showMessage("データが見つかりません。"); return; }
     container.innerHTML = "";
