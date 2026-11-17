@@ -79,8 +79,12 @@ button, select, input { font-family: inherit; }
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .card-top .liver-name { flex: 1; }
 .unlistened-badge { display: inline-block; white-space: nowrap; font-size: 0.75rem; color: var(--text-sub); border: 1px solid #ccc; background: #fff; padding: 1px 8px; border-radius: 4px; }
-.modal-badge { margin: 0 0 5px; }
-.modal-badge:empty { display: none; }
+/* ポップアップのタイトルと未聴の印を横に並べる */
+.modal-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 30px 10px 0; }
+.modal-title-row h3 { margin: 0; }
+/* ポップアップ一番下の登録日・更新日 */
+.modal-dates { margin: 20px 0 0; font-size: 0.8rem; color: var(--text-sub); text-align: right; }
+.modal-dates:empty { display: none; }
 .has-review { margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }
 
 /* 評価の表示（評価の数だけ濃く、残りは薄く） */
@@ -96,9 +100,8 @@ button, select, input { font-family: inherit; }
 .public-modal.show { display: flex; }
 .public-modal-content { background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
 .public-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-sub); }
-.public-modal-content .liver-name { margin-bottom: 5px; }
-.public-modal-content h3 { color: var(--text-strong); margin: 0 30px 10px 0; }
-.release { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 15px; }
+.public-modal-content .liver-name { margin-bottom: 15px; }
+.public-modal-content h3 { color: var(--text-strong); }
 .public-modal-review { margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc; color: #555; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
 
 .message { color: var(--text-sub); }

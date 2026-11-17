@@ -143,6 +143,8 @@ async function loadData() {
                     releaseMonth: Number(r.releaseMonth) || 0,
                     review: String(r.review ?? "").trim(),
                     listened: normalize(r.listenStatus) === "済", // 視聴済みなら true
+                    createdAt: normalize(r.createdAt), // 登録日（スプレッドシートの表示のまま）
+                    updatedAt: normalize(r.updatedAt), // 更新日（スプレッドシートの表示のまま）
                     ratings,
                 };
             });
@@ -406,12 +408,14 @@ function openModal(voice) {
     document.getElementById("pvTitle").textContent = voice.title;
     document.getElementById("pvLiver").textContent = `👤 ${voice.livers.join("、")}`;
     document.getElementById("pvListen").innerHTML = voice.listened ? "" : UNLISTENED_BADGE;
-    document.getElementById("pvRelease").textContent = voice.releaseYear
-        ? `📅 ${voice.releaseYear}年${voice.releaseMonth ? `${voice.releaseMonth}月` : ""}`
-        : "";
     document.getElementById("pvRating").innerHTML = ratingsHtml(voice) || '<p class="no-rating">未評価</p>';
     // 感想は textContent で入れる（HTML として解釈させないため）
     document.getElementById("pvReview").textContent = voice.review || "感想はまだありません。";
+    // 登録日・更新日は、入っているものだけ表示する
+    const dates = [];
+    if (voice.createdAt) dates.push(`登録日：${voice.createdAt}`);
+    if (voice.updatedAt) dates.push(`更新日：${voice.updatedAt}`);
+    document.getElementById("pvDates").textContent = dates.join("　");
     document.getElementById("publicVoiceModal").classList.add("show");
 }
 

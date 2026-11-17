@@ -60,12 +60,16 @@
     <div id="publicVoiceModal" class="public-modal">
         <div class="public-modal-content">
             <button class="public-modal-close" id="closePublicModal" aria-label="閉じる">×</button>
-            <h3 id="pvTitle"></h3>
+            <!-- タイトルと、その横の未聴の印 -->
+            <div class="modal-title-row">
+                <h3 id="pvTitle"></h3>
+                <span id="pvListen"></span>
+            </div>
             <p class="liver-name" id="pvLiver"></p>
-            <p class="modal-badge" id="pvListen"></p>
-            <p class="release" id="pvRelease"></p>
             <div class="rating-list" id="pvRating"></div>
             <div class="public-modal-review" id="pvReview"></div>
+            <!-- 一番下に登録日と更新日 -->
+            <p class="modal-dates" id="pvDates"></p>
         </div>
     </div>
 
