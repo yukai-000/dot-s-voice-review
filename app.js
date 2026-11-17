@@ -25,6 +25,8 @@ let viewMode = "year";   // year（年別） / title（ボイス別）
 let sortKey = "";        // 空なら発売日順。評価の列名が入るとその評価が高い順
 
 const MAIN_AGENCIES = ["にじさんじ", "ホロスターズ"];
+// 視聴済みのボイスに付ける印
+const LISTENED_BADGE = '<span class="listened-badge">✔ 視聴済み</span>';
 
 // ---------- 文字の処理 ----------
 
@@ -283,7 +285,10 @@ function createCard(voice, { showTitle = false } = {}) {
     card.className = "card";
     card.innerHTML = `
         ${showTitle ? `<h4>${escapeHtml(voice.title)}</h4>` : ""}
-        <p class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</p>
+        <div class="card-top">
+            <p class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</p>
+            ${voice.listened ? LISTENED_BADGE : ""}
+        </div>
         <div class="rating-list">${ratingsHtml(voice)}</div>
         ${voice.review ? '<p class="has-review">📝 感想あり</p>' : ""}
     `;
@@ -400,6 +405,7 @@ document.addEventListener("click", e => {
 function openModal(voice) {
     document.getElementById("pvTitle").textContent = voice.title;
     document.getElementById("pvLiver").textContent = `👤 ${voice.livers.join("、")}`;
+    document.getElementById("pvListened").innerHTML = voice.listened ? LISTENED_BADGE : "";
     document.getElementById("pvRelease").textContent = voice.releaseYear
         ? `📅 ${voice.releaseYear}年${voice.releaseMonth ? `${voice.releaseMonth}月` : ""}`
         : "";
