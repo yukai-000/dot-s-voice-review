@@ -249,12 +249,12 @@ function ratingStyle(key) {
 function ratingRowHtml(key, value) {
     const { label, icon } = ratingStyle(key);
     return `
-        <div class="rating-row">
+        <span class="rating-row">
             <span class="rating-label">${escapeHtml(label)}</span>
             <span class="rating-icons" aria-label="${escapeHtml(label)} ${value} / ${MAX_RATING}">
                 <span class="on">${icon.repeat(value)}</span><span class="off">${icon.repeat(MAX_RATING - value)}</span>
             </span>
-        </div>`;
+        </span>`;
 }
 
 // 評価が入っている項目（1以上）だけを並べた HTML。未評価の項目は表示しない
@@ -312,16 +312,18 @@ function closeOthers(selector) {
 }
 
 // カード1枚を作る（押すと感想のポップアップを開く）
+// ボタンの中には div や p を入れられない決まりなので、すべて span で作り、見た目は CSS で整える
 function createCard(voice) {
     const card = document.createElement("button");
+    card.type = "button";
     card.className = "card";
     card.innerHTML = `
-        <div class="card-top">
-            <p class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</p>
+        <span class="card-top">
+            <span class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</span>
             ${voice.listened ? "" : UNLISTENED_BADGE}
-        </div>
-        <div class="rating-list">${ratingsHtml(voice)}</div>
-        ${voice.review ? '<p class="has-review">📝 感想あり</p>' : ""}
+        </span>
+        <span class="rating-list">${ratingsHtml(voice)}</span>
+        ${voice.review ? '<span class="has-review">📝 感想あり</span>' : ""}
     `;
     card.addEventListener("click", () => openModal(voice));
     return card;
@@ -333,6 +335,7 @@ function createAccordion(labelHtml, voices) {
     wrap.className = "accordion";
 
     const button = document.createElement("button");
+    button.type = "button";
     button.className = "title-accordion";
     button.innerHTML = labelHtml;
 

@@ -76,7 +76,7 @@ button, select, input { font-family: inherit; }
 .card-grid { align-items: start; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
 .card { display: flex; flex-direction: column; justify-content: flex-start; width: 100%; text-align: left; font-size: 1rem; color: inherit; background: var(--card); padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 1px solid #f0f0f0; }
 .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); border-color: var(--pink-light); outline: none; }
-.liver-name { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 10px 0; }
+.liver-name { display: block; color: var(--text-sub); font-size: 0.9rem; margin: 0 0 10px 0; }
 /* ライバー名と未聴の印を横に並べる */
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .card-top .liver-name { flex: 1; }
@@ -87,7 +87,7 @@ button, select, input { font-family: inherit; }
 /* ポップアップ一番下の登録日・更新日 */
 .modal-dates { margin: 20px 0 0; font-size: 0.8rem; color: var(--text-sub); text-align: right; }
 .modal-dates:empty { display: none; }
-.has-review { margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }
+.has-review { display: block; margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }
 
 /* 評価の表示（評価の数だけ濃く、残りは薄く） */
 .rating-list { display: flex; flex-direction: column; gap: 4px; }
