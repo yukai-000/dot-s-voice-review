@@ -75,6 +75,14 @@
             <p class="liver-name" id="pvLiver"></p>
             <div class="rating-list" id="pvRating"></div>
             <div class="public-modal-review" id="pvReview"></div>
+            <!-- 詳細（ネタバレ）：ボタンを押したときだけ表示する -->
+            <div class="spoiler" id="pvSpoiler" hidden>
+                <button type="button" class="spoiler-btn" id="spoilerBtn" aria-expanded="false" aria-controls="pvDetail">
+                    <span class="spoiler-show">⚠ ネタバレ注意　押すと詳細を表示</span>
+                    <span class="spoiler-hide">詳細を隠す</span>
+                </button>
+                <div class="spoiler-body" id="pvDetail"></div>
+            </div>
             <!-- 一番下に登録日と更新日 -->
             <p class="modal-dates" id="pvDates"></p>
         </div>

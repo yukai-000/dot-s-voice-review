@@ -27,6 +27,7 @@ const HEADER_ALIASES = {
     "おすすめ度": "recommendLevel",
     "甘さ": "sweetness",
     "感想": "review",
+    "詳細": "detail",     // ネタバレを含む詳しい感想
     "非公開": "isHidden",
     "更新日": "updatedAt",
     "登録日": "createdAt",
@@ -162,6 +163,7 @@ async function loadData() {
                     releaseYear: Number(r.releaseYear) || 0,
                     releaseMonth: Number(r.releaseMonth) || 0,
                     review: String(r.review ?? "").trim(),
+                    detail: String(r.detail ?? "").trim(), // ネタバレを含む詳しい感想
                     listened: normalize(r.listenStatus) === "済", // 視聴済みなら true
                     createdAt: normalize(r.createdAt), // 登録日（スプレッドシートの表示のまま）
                     updatedAt: normalize(r.updatedAt), // 更新日（スプレッドシートの表示のまま）
@@ -453,6 +455,12 @@ function openModal(voice) {
     document.getElementById("pvRating").innerHTML = ratingsHtml(voice) || '<p class="no-rating">未評価</p>';
     // 感想は textContent で入れる（HTML として解釈させないため）
     document.getElementById("pvReview").textContent = voice.review || "感想はまだありません。";
+    // 詳細（ネタバレ）は、ボタンを押すまで隠しておく。詳細がないときはボタンごと出さない
+    const spoiler = document.getElementById("pvSpoiler");
+    spoiler.hidden = !voice.detail;
+    spoiler.classList.remove("open");
+    document.getElementById("spoilerBtn").setAttribute("aria-expanded", "false");
+    document.getElementById("pvDetail").textContent = voice.detail; // textContent で入れる（HTML として解釈させないため）
     // 登録日・更新日は、入っているものだけ表示する
     const dates = [];
     if (voice.createdAt) dates.push(`登録日：${voice.createdAt}`);
@@ -471,6 +479,12 @@ function closeModal() {
 }
 
 document.getElementById("closePublicModal").addEventListener("click", closeModal);
+// 「ネタバレ注意」のボタンを押すと、詳細を表示する（もう一度押すと隠す）
+document.getElementById("spoilerBtn").addEventListener("click", () => {
+    const spoiler = document.getElementById("pvSpoiler");
+    const open = spoiler.classList.toggle("open");
+    document.getElementById("spoilerBtn").setAttribute("aria-expanded", String(open));
+});
 // 背景（暗い部分）を押しても閉じる
 document.getElementById("publicVoiceModal").addEventListener("click", e => { if (e.target.id === "publicVoiceModal") closeModal(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });

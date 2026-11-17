@@ -108,6 +108,16 @@ body.scroll-locked { position: fixed; left: 0; right: 0; overflow: hidden; }
 .public-modal-content h3 { color: var(--text-strong); }
 .public-modal-review { margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc; color: #555; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
 
+/* 詳細（ネタバレ）：ボタンを押すまで中身を隠す */
+.spoiler { margin-top: 16px; }
+.spoiler[hidden] { display: none; }
+.spoiler-btn { width: 100%; padding: 10px 12px; border: 1px dashed var(--pink); border-radius: 4px; background: var(--pink-bg); color: var(--pink-dark); font-size: 0.9rem; font-weight: bold; cursor: pointer; }
+.spoiler-hide { display: none; }
+.spoiler.open .spoiler-show { display: none; }
+.spoiler.open .spoiler-hide { display: inline; }
+.spoiler-body { display: none; margin-top: 12px; color: #555; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.spoiler.open .spoiler-body { display: block; }
+
 .message { color: var(--text-sub); }
 
 /* ---------- 上に戻るボタン ---------- */
