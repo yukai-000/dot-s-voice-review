@@ -12,6 +12,7 @@ const RATING_STYLE = {
     "友情度":       { label: "友情度",   icon: "🤝" },
     "シリアス度":   { label: "シリアス度", icon: "💙" },
     "切なさ":       { label: "切なさ",   icon: "💧" },
+    "ダーク度":     { label: "ダーク度", icon: "🖤" },
 };
 const DEFAULT_ICON = "⭐";
 
