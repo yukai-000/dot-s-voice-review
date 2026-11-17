@@ -41,9 +41,16 @@
     <main class="main-content">
         <!-- 表示の切り替えと並び順 -->
         <div class="view-mode-controls">
-            <select id="sortSelect" class="sort-select" aria-label="並び順">
-                <option value="">並び順：発売日</option>
-            </select>
+            <div class="filter-group">
+                <select id="sortSelect" class="sort-select" aria-label="並び順">
+                    <option value="">並び順：発売日</option>
+                </select>
+                <!-- 未聴のボイスを隠すチェックボックス（最初はチェックあり） -->
+                <label class="hide-unlistened">
+                    <input type="checkbox" id="hideUnlistened" checked>
+                    未聴を非表示
+                </label>
+            </div>
             <div class="view-mode-buttons">
                 <button class="view-mode-btn active" data-view="year">年別</button>
                 <button class="view-mode-btn" data-view="title">ボイス別</button>

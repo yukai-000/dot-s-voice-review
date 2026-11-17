@@ -185,14 +185,26 @@ function matchesTab(agency) {
     return agency === currentTab;
 }
 
-// ライバーの絞り込みリストを、今のタブのライバーだけで作り直す
+// 「未聴を非表示」にチェックが入っているか
+function hideUnlistened() {
+    return document.getElementById("hideUnlistened").checked;
+}
+
+// 今のタブと「未聴を非表示」の設定で、表示の対象になるボイスかどうか
+function isVisible(voice) {
+    if (!matchesTab(voice.agency)) return false;
+    if (hideUnlistened() && !voice.listened) return false;
+    return true;
+}
+
+// ライバーの絞り込みリストを、今表示の対象になっているボイスのライバーだけで作り直す
 function updateLiverOptions() {
     const select = document.getElementById("liverInput");
     const selected = select.value;
     select.innerHTML = '<option value="">👤 ライバー</option>';
 
     const names = new Set();
-    allVoices.filter(v => matchesTab(v.agency)).forEach(v => v.livers.forEach(n => names.add(n)));
+    allVoices.filter(isVisible).forEach(v => v.livers.forEach(n => names.add(n)));
 
     [...names]
         .sort((a, b) => sortName(a).localeCompare(sortName(b), "ja"))
@@ -262,7 +274,7 @@ function filteredVoices() {
     const selectedLiver = document.getElementById("liverInput").value;
 
     return allVoices.filter(v => {
-        if (!matchesTab(v.agency)) return false;
+        if (!isVisible(v)) return false;
         if (selectedLiver && !v.livers.includes(selectedLiver)) return false;
         if (!keyword) return true;
 
@@ -443,6 +455,12 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 // 年別・ボイス別
 document.querySelectorAll(".view-mode-btn").forEach(btn => {
     btn.addEventListener("click", () => { viewMode = btn.dataset.view; renderGallery(); });
+});
+
+// 未聴を非表示のチェックボックス
+document.getElementById("hideUnlistened").addEventListener("change", () => {
+    updateLiverOptions();
+    renderGallery();
 });
 
 // 並び順

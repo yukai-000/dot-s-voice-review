@@ -52,6 +52,10 @@ button, select, input { font-family: inherit; }
 .view-mode-btn { background: #fff; border: 1px solid var(--pink); color: var(--pink); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
 .view-mode-btn.active { background: var(--pink); color: #fff; }
 .sort-select { padding: 8px 12px; border-radius: 4px; border: 1px solid var(--pink); color: var(--text-strong); background: #fff; font-size: 0.9rem; cursor: pointer; }
+/* 並び順と「未聴を非表示」を横に並べる */
+.filter-group { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+.hide-unlistened { display: flex; align-items: center; gap: 6px; color: var(--text-strong); font-size: 0.9rem; cursor: pointer; user-select: none; }
+.hide-unlistened input { width: 18px; height: 18px; accent-color: var(--pink); cursor: pointer; margin: 0; }
 .sort-note { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 15px; }
 
 /* 年ごとのまとまり（新しい年が上） */
@@ -119,5 +123,6 @@ button, select, input { font-family: inherit; }
     .view-mode-controls { flex-direction: column-reverse; align-items: stretch; }
     .view-mode-buttons { justify-content: space-between; }
     .view-mode-btn { flex: 1; padding: 8px 6px; }
-    .sort-select { width: 100%; }
+    .filter-group { width: 100%; }
+    .sort-select { flex: 1; }
 }
