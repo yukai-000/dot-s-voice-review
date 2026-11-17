@@ -140,6 +140,7 @@ async function loadData() {
                     releaseYear: Number(r.releaseYear) || 0,
                     releaseMonth: Number(r.releaseMonth) || 0,
                     review: String(r.review ?? "").trim(),
+                    listened: normalize(r.listenStatus) === "済", // 視聴済みなら true
                     ratings,
                 };
             });
@@ -316,8 +317,9 @@ function createAccordion(labelHtml, voices) {
     return wrap;
 }
 
-// ボイスの最初のライバーの読みで並べる
-function byFirstLiver(a, b) {
+// タイトルの中の並べ方：視聴済みを上、未聴を下にして、それぞれ最初のライバーの五十音順
+function byListenedThenLiver(a, b) {
+    if (a.listened !== b.listened) return a.listened ? -1 : 1;
     return sortName(a.livers[0] || "").localeCompare(sortName(b.livers[0] || ""), "ja");
 }
 
@@ -328,7 +330,8 @@ function appendTitles(parent, voices) {
     Object.keys(groups)
         .sort((a, b) => a.localeCompare(b, "ja"))
         .forEach(title => {
-            parent.appendChild(createAccordion(`<span>🎤 ${escapeHtml(title)}</span>`, groups[title].sort(byFirstLiver)));
+            const label = `<span>🎤 ${escapeHtml(title)}</span><span class="count">${groups[title].length}件</span>`;
+            parent.appendChild(createAccordion(label, groups[title].sort(byListenedThenLiver)));
         });
 }
 
