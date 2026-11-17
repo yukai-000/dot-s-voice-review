@@ -26,7 +26,7 @@ let sortKey = "";        // 空なら発売日順。評価の列名が入ると�
 
 const MAIN_AGENCIES = ["にじさんじ", "ホロスターズ"];
 // 視聴済みのボイスに付ける印
-const LISTENED_BADGE = '<span class="listened-badge">✔ 視聴済み</span>';
+const LISTENED_BADGE = '<span class="listened-badge" title="視聴済み" aria-label="視聴済み">✔</span>';
 
 // ---------- 文字の処理 ----------
 
