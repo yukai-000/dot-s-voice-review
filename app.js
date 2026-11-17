@@ -21,7 +21,7 @@ let allVoices = [];      // 公開中のボイス一覧
 let allLivers = [];      // ライバー一覧（ふりがな付き）
 let ratingKeys = [];     // 評価として扱う列名の一覧（表示順）
 let currentTab = "にじさんじ";
-let viewMode = "year";   // year（年別） / title（ボイス別） / liver（ライバー別）
+let viewMode = "year";   // year（年別） / title（ボイス別）
 let sortKey = "";        // 空なら発売日順。評価の列名が入るとその評価が高い順
 
 const MAIN_AGENCIES = ["にじさんじ", "ホロスターズ"];
@@ -378,26 +378,10 @@ function renderGallery() {
             });
             container.appendChild(yearSection);
         });
-    } else if (viewMode === "title") {
+    } else {
         // ボイス別：タイトルごとのアコーディオン
         const section = document.createElement("section");
         appendTitles(section, voices);
-        container.appendChild(section);
-    } else {
-        // ライバー別：ライバーごとのアコーディオン（複数人のボイスはそれぞれのライバーに入る）
-        const groups = {};
-        voices.forEach(v => v.livers.forEach(name => { (groups[name] ||= []).push(v); }));
-        const section = document.createElement("section");
-        Object.keys(groups)
-            .sort((a, b) => sortName(a).localeCompare(sortName(b), "ja"))
-            .forEach(name => {
-                const label = `<span>👤 ${escapeHtml(name)}</span><span class="count">${groups[name].length}件</span>`;
-                // ライバー別ではカードにタイトルを出す（どのボイスか分かるように）
-                const acc = createAccordion(label, []);
-                const grid = acc.querySelector(".card-grid");
-                groups[name].forEach(v => grid.appendChild(createCard(v, { showTitle: true })));
-                section.appendChild(acc);
-            });
         container.appendChild(section);
     }
 }
@@ -443,7 +427,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     });
 });
 
-// 年別・ボイス別・ライバー別
+// 年別・ボイス別
 document.querySelectorAll(".view-mode-btn").forEach(btn => {
     btn.addEventListener("click", () => { viewMode = btn.dataset.view; renderGallery(); });
 });
