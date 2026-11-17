@@ -116,7 +116,11 @@ button, select, input { font-family: inherit; }
 /* ---------- スマホ向け ---------- */
 @media (max-width: 600px) {
     .logo { font-size: 1.4rem; }
-    .local-controls { flex-direction: column; }
+    /* 検索とライバーは横に並べて1行にする（文字は16pxのまま。小さいと iPhone で入力時に画面が拡大されるため） */
+    .local-controls { gap: 8px; margin: 5px auto 10px; }
+    .search-wrapper input,
+    .search-wrapper select { padding: 10px 8px; padding-right: 28px; }
+    .clear-btn { padding: 0 6px; }
     .tab-btn { padding: 10px 14px; }
     .view-mode-controls { flex-direction: column-reverse; align-items: stretch; }
     .view-mode-buttons { justify-content: space-between; }
