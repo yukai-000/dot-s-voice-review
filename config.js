@@ -8,8 +8,8 @@ window.SITE_CONFIG = {
   siteTitle: "Voice Collection",
 
   // 「public」シートを CSV 形式で公開した URL
-  voicesCsvUrl: "",
+  voicesCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcj4Gpa4Ri2M8W18IPrBcwguKQ86gn9OSSKfwDv5aueZjMT7gRS-snaPKkdfZ0ToAkeN4phlysnpER/pub?gid=1&single=true&output=csv",
 
   // 「livers」シートを CSV 形式で公開した URL
-  liversCsvUrl: "",
+  liversCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcj4Gpa4Ri2M8W18IPrBcwguKQ86gn9OSSKfwDv5aueZjMT7gRS-snaPKkdfZ0ToAkeN4phlysnpER/pub?gid=2&single=true&output=csv",
 };
