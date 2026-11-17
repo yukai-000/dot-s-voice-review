@@ -66,7 +66,7 @@ button, select, input { font-family: inherit; }
 .month-section { margin-bottom: 40px; }
 .month-section h3 { border-bottom: 2px solid var(--pink-light); color: var(--pink-dark); padding-bottom: 5px; margin-bottom: 20px; }
 
-/* タイトル・ライバーのアコーディオン */
+/* ボイスタイトルのアコーディオン */
 .title-accordion { width: 100%; text-align: left; font-size: 1rem; color: var(--text); background: #fff; border: 1px solid var(--border); padding: 15px; cursor: pointer; display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; border-left: 4px solid var(--pink); font-weight: bold; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
 .title-accordion .count { color: var(--pink); white-space: nowrap; }
 .title-content { display: none; padding: 15px 0; }

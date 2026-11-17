@@ -287,7 +287,7 @@ function showMessage(text) {
     container.appendChild(p);
 }
 
-// 検索・タブ・ライバー・年の条件で絞り込んだボイスを返す
+// 検索・タブ・ライバー・「未聴を非表示」の条件で絞り込んだボイスを返す
 function filteredVoices() {
     const keyword = normalize(document.getElementById("searchInput").value).toLowerCase();
     const keywordKana = toHiragana(keyword);
@@ -306,11 +306,9 @@ function filteredVoices() {
     });
 }
 
-// 開いている展開表示を閉じる（except に渡した要素とその親は閉じない）
-function closeOthers(selector, except) {
-    document.querySelectorAll(selector + ".open").forEach(el => {
-        if (!except || !el.contains(except)) el.classList.remove("open");
-    });
+// 開いている展開表示をすべて閉じる
+function closeOthers(selector) {
+    document.querySelectorAll(selector + ".open").forEach(el => el.classList.remove("open"));
 }
 
 // カード1枚を作る（押すと感想のポップアップを開く）
