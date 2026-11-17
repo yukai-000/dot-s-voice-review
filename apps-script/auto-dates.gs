@@ -5,16 +5,16 @@
  * （このファイルはサイトでは使わない。スプレッドシートに貼るための控え）
  *
  * 動き：
- *   - voices シートの行を編集すると、その行の updatedAt（更新日）に今日の日付が入る
- *   - createdAt（登録日）が空欄で、title が入っている行には、登録日も今日の日付で入る
+ *   - voices シートの行を編集すると、その行の「更新日」に今日の日付が入る
+ *   - 「登録日」が空欄で、「タイトル」が入っている行には、登録日も今日の日付で入る
  *   - 列の場所は見出しの名前で探すので、評価の列を追加して列がずれても動く
  */
 
-// 対象のシート名と、見出しの名前
+// 対象のシート名と、見出しの名前（日本語と、以前の英語のどちらでも探す）
 const SHEET_NAME = "voices";
-const TITLE_HEADER = "title";
-const UPDATED_HEADER = "updatedAt";
-const CREATED_HEADER = "createdAt";
+const TITLE_HEADERS = ["タイトル", "title"];
+const UPDATED_HEADERS = ["更新日", "updatedAt"];
+const CREATED_HEADERS = ["登録日", "createdAt"];
 const DATE_FORMAT = "yyyy/mm/dd";
 
 /**
@@ -28,9 +28,9 @@ function onEdit(e) {
 
   // 見出し（1行目）から、各列の位置を探す（1始まり）
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const titleCol = headers.indexOf(TITLE_HEADER) + 1;
-  const updatedCol = headers.indexOf(UPDATED_HEADER) + 1;
-  const createdCol = headers.indexOf(CREATED_HEADER) + 1;
+  const titleCol = findColumn(headers, TITLE_HEADERS);
+  const updatedCol = findColumn(headers, UPDATED_HEADERS);
+  const createdCol = findColumn(headers, CREATED_HEADERS);
   if (!titleCol || !updatedCol || !createdCol) return; // 見出しが見つからなければ何もしない
 
   // 日付の列そのものを手で直したときは、上書きしない
@@ -56,4 +56,18 @@ function onEdit(e) {
       createdCell.setValue(today).setNumberFormat(DATE_FORMAT);
     }
   }
+}
+
+/**
+ * 見出しの並びから、候補の名前のどれかと一致する列の番号（1始まり）を返す。見つからなければ 0
+ * @param {Array} headers 1行目の見出し
+ * @param {string[]} names 探す見出しの名前の候補
+ * @return {number}
+ */
+function findColumn(headers, names) {
+  for (const name of names) {
+    const index = headers.indexOf(name);
+    if (index !== -1) return index + 1;
+  }
+  return 0;
 }

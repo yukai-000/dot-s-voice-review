@@ -14,6 +14,25 @@ const RATING_STYLE = {
     "切なさ":       { label: "切なさ",   icon: "💧" },
 };
 const DEFAULT_ICON = "⭐";
+
+// スプレッドシートの日本語の見出し → プログラムの中で使う名前
+// 英語の見出し（以前の形）のままでも読めるように、ここにない見出しはそのまま使う
+const HEADER_ALIASES = {
+    "タイトル": "title",
+    "ライバー": "liverName",
+    "事務所": "agency",
+    "発売年": "releaseYear",
+    "発売月": "releaseMonth",
+    "視聴状態": "listenStatus",
+    "おすすめ度": "recommendLevel",
+    "甘さ": "sweetness",
+    "感想": "review",
+    "非公開": "isHidden",
+    "更新日": "updatedAt",
+    "登録日": "createdAt",
+    "名前": "name",       // livers シート
+    "ふりがな": "furigana", // livers シート
+};
 const MAX_RATING = 5; // 5段階評価
 
 // ---------- 画面の状態 ----------
@@ -88,13 +107,14 @@ async function fetchCsv(url) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`CSV の取得に失敗しました（${res.status}）`);
     const rows = parseCsv(await res.text());
-    const header = (rows.shift() || []).map(h => normalize(h));
+    // 見出しを、プログラムの中で使う名前にそろえる
+    const header = (rows.shift() || []).map(h => HEADER_ALIASES[normalize(h)] || normalize(h));
     const records = rows.map(r => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ""])));
     return { header, records };
 }
 
 // 見出しの並びから、評価として扱う列を決める
-// おすすめ度・甘さ ＋ 「sweetness と review の間にある列」すべて
+// おすすめ度・甘さ ＋ 「甘さ と 感想 の間にある列」すべて
 function detectRatingKeys(header) {
     const keys = ["recommendLevel", "sweetness"].filter(k => header.includes(k));
     const start = header.indexOf("sweetness");
