@@ -1,0 +1,114 @@
+/* =============================================================
+   Voice Collection の見た目
+   元の voice.css のピンク系の配色をそのまま引き継いでいる
+   ============================================================= */
+
+/* 色をまとめて管理（変えたいときはここだけ直せばよい） */
+:root {
+    --pink: #d49a9a;
+    --pink-dark: #c08080;
+    --pink-light: #f0d5d5;
+    --pink-bg: #fdf5f5;
+    --text: #333;
+    --text-strong: #5a4b50;
+    --text-sub: #888;
+    --bg: #f9f9f9;
+    --card: #fff;
+    --border: #eee;
+}
+
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', Meiryo, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+button, select, input { font-family: inherit; }
+
+/* ---------- 上に固定される部分 ---------- */
+.sticky-area { position: sticky; top: 0; z-index: 100; background: #fff; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.header { padding: 15px; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: auto; }
+.logo { margin: 0; font-size: 1.8rem; font-weight: 800; color: var(--pink); letter-spacing: 1px; }
+
+.local-controls { display: flex; gap: 10px; margin: 10px auto 15px; max-width: 1000px; padding: 0 15px; width: 100%; }
+
+/* 検索窓・ライバー選択とクリアボタン */
+.search-wrapper { position: relative; flex: 1; display: flex; align-items: center; min-width: 0; }
+.search-wrapper input,
+.search-wrapper select { width: 100%; padding: 12px 15px; padding-right: 35px; border-radius: 4px; border: 1px solid var(--pink); background: #fff; color: var(--text-strong); outline: none; font-size: 1rem; appearance: none; }
+.search-wrapper select { cursor: pointer; }
+.clear-btn { position: absolute; right: 5px; background: none; border: none; color: #bba2a2; font-size: 1.5rem; cursor: pointer; padding: 0 10px; line-height: 1; transition: 0.2s; }
+.clear-btn:hover { color: var(--pink); }
+
+/* 事務所タブ */
+.tabs { display: flex; border-bottom: 2px solid var(--border); margin: 0 auto; max-width: 1000px; padding: 0 15px; overflow-x: auto; }
+.tab-btn { background: transparent; border: none; padding: 10px 20px; color: var(--text-sub); cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--pink); }
+.tab-btn.active { color: var(--pink); border-bottom: 3px solid var(--pink); }
+
+/* ---------- メイン部分 ---------- */
+.main-content { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
+
+/* 並び順と表示の切り替え */
+.view-mode-controls { display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+.view-mode-buttons { display: flex; gap: 8px; }
+.view-mode-btn { background: #fff; border: 1px solid var(--pink); color: var(--pink); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+.view-mode-btn.active { background: var(--pink); color: #fff; }
+.sort-select { padding: 8px 12px; border-radius: 20px; border: 1px solid var(--pink); color: var(--text-strong); background: #fff; font-size: 0.9rem; cursor: pointer; }
+.sort-note { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 15px; }
+
+/* 年ごとのまとまり（新しい年が上） */
+.year-section { margin-bottom: 50px; }
+.year-heading { margin: 0 0 20px; color: var(--pink); font-size: 2rem; border-bottom: 3px solid var(--pink); padding-bottom: 5px; }
+
+/* 月ごとのまとまり */
+.month-section { margin-bottom: 40px; }
+.month-section h3 { border-bottom: 2px solid var(--pink-light); color: var(--pink-dark); padding-bottom: 5px; margin-bottom: 20px; }
+
+/* タイトル・ライバーのアコーディオン */
+.title-accordion { width: 100%; text-align: left; font-size: 1rem; color: var(--text); background: #fff; border: 1px solid var(--border); padding: 15px; cursor: pointer; display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; border-left: 4px solid var(--pink); font-weight: bold; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.title-accordion .count { color: var(--pink); white-space: nowrap; }
+.title-content { display: none; padding: 15px 0; }
+.accordion.open .title-content { display: block; }
+.accordion.open .title-accordion { background: var(--pink-bg); }
+
+/* ---------- カード ---------- */
+.card-grid { align-items: start; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+.card { display: flex; flex-direction: column; justify-content: flex-start; width: 100%; text-align: left; font-size: 1rem; color: inherit; background: var(--card); padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 1px solid #f0f0f0; }
+.card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); border-color: var(--pink-light); outline: none; }
+.card h4 { margin: 0 0 10px 0; color: var(--text-strong); font-size: 1.1rem; }
+.liver-name { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 10px 0; }
+.has-review { margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }
+
+/* 評価の表示（評価の数だけ濃く、残りは薄く） */
+.rating-list { display: flex; flex-direction: column; gap: 4px; }
+.rating-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+.rating-label { min-width: 5.5em; color: var(--text-strong); font-size: 0.85rem; }
+.rating-icons { letter-spacing: 1px; white-space: nowrap; }
+.rating-icons .off { opacity: 0.2; filter: grayscale(0.3); }
+.no-rating { color: var(--text-sub); font-size: 0.9rem; margin: 0; }
+
+/* ---------- 感想のポップアップ ---------- */
+.public-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+.public-modal.show { display: flex; }
+.public-modal-content { background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+.public-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-sub); }
+.public-modal-content .liver-name { margin-bottom: 5px; }
+.public-modal-content h3 { color: var(--text-strong); margin: 0 30px 10px 0; }
+.release { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 15px; }
+.public-modal-review { margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc; color: #555; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+
+.message { color: var(--text-sub); }
+
+/* ---------- 上に戻るボタン ---------- */
+.scroll-top-btn { position: fixed; bottom: 30px; right: 20px; width: 50px; height: 50px; background: rgba(212, 154, 154, 0.7); color: #fff; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.scroll-top-btn.show { opacity: 1; visibility: visible; }
+.scroll-top-btn:hover { background: rgba(212, 154, 154, 1); }
+
+/* ---------- スマホ向け ---------- */
+@media (max-width: 600px) {
+    .logo { font-size: 1.4rem; }
+    .local-controls { flex-direction: column; }
+    .tab-btn { padding: 10px 14px; }
+    .view-mode-controls { flex-direction: column-reverse; align-items: stretch; }
+    .view-mode-buttons { justify-content: space-between; }
+    .view-mode-btn { flex: 1; padding: 8px 6px; }
+    .sort-select { width: 100%; }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Collection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 上に固定される部分（見出し・検索・事務所タブ） -->
+    <div class="sticky-area">
+        <header class="header">
+            <div class="header-inner">
+                <h1 class="logo" id="siteTitle">Voice Collection</h1>
+            </div>
+        </header>
+
+        <div class="local-controls">
+            <!-- キーワード検索とクリアボタン -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="キーワード検索...">
+                <button class="clear-btn" id="clearSearchBtn" title="クリア" aria-label="キーワードをクリア">×</button>
+            </div>
+            <!-- ライバーの絞り込みとクリアボタン -->
+            <div class="search-wrapper">
+                <select id="liverInput" aria-label="ライバーで絞り込み">
+                    <option value="">👤 ライバー</option>
+                </select>
+                <button class="clear-btn" id="clearLiverBtn" title="クリア" aria-label="ライバーの絞り込みをクリア">×</button>
+            </div>
+        </div>
+
+        <!-- 事務所タブ -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="にじさんじ">にじさんじ</button>
+            <button class="tab-btn" data-tab="ホロスターズ">ホロスターズ</button>
+            <button class="tab-btn" data-tab="その他">その他</button>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- 表示の切り替えと並び順 -->
+        <div class="view-mode-controls">
+            <select id="sortSelect" class="sort-select" aria-label="並び順">
+                <option value="">並び順：発売日</option>
+            </select>
+            <div class="view-mode-buttons">
+                <button class="view-mode-btn active" data-view="year">年別</button>
+                <button class="view-mode-btn" data-view="title">ボイス別</button>
+                <button class="view-mode-btn" data-view="liver">ライバー別</button>
+            </div>
+        </div>
+
+        <!-- 一覧（年別のときは新しい年 → 古い年の順に全部並ぶ） -->
+        <div id="galleryContainer" class="gallery-container">
+            <p>データを読み込み中...</p>
+        </div>
+    </main>
+
+    <!-- カードを押したときに出る感想のポップアップ -->
+    <div id="publicVoiceModal" class="public-modal">
+        <div class="public-modal-content">
+            <button class="public-modal-close" id="closePublicModal" aria-label="閉じる">×</button>
+            <h3 id="pvTitle"></h3>
+            <p class="liver-name" id="pvLiver"></p>
+            <p class="release" id="pvRelease"></p>
+            <div class="rating-list" id="pvRating"></div>
+            <div class="public-modal-review" id="pvReview"></div>
+        </div>
+    </div>
+
+    <!-- 上に戻るボタン -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="上に戻る">▲</button>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
