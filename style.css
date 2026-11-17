@@ -75,12 +75,6 @@ button, select, input { font-family: inherit; }
 .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); border-color: var(--pink-light); outline: none; }
 .card h4 { margin: 0 0 10px 0; color: var(--text-strong); font-size: 1.1rem; }
 .liver-name { color: var(--text-sub); font-size: 0.9rem; margin: 0 0 10px 0; }
-/* ライバー名と視聴済みの印を横に並べる */
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.card-top .liver-name { flex: 1; }
-.listened-badge { display: inline-block; white-space: nowrap; font-size: 0.75rem; font-weight: bold; color: #fff; background: var(--pink); padding: 2px 8px; border-radius: 4px; }
-.modal-badge { margin: 0 0 5px; }
-.modal-badge:empty { display: none; }
 .has-review { margin: 10px 0 0; font-size: 0.8rem; color: var(--pink-dark); }
 
 /* 評価の表示（評価の数だけ濃く、残りは薄く） */
