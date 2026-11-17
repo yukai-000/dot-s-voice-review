@@ -83,6 +83,11 @@
                 </button>
                 <div class="spoiler-body" id="pvDetail"></div>
             </div>
+            <!-- いいね（視聴済み）・気になる（未聴）のボタン。押した数も出す -->
+            <div class="reaction" id="pvReaction" hidden>
+                <button type="button" class="reaction-btn" id="reactionBtn" aria-pressed="false"></button>
+                <span class="reaction-msg" id="reactionMsg" role="status"></span>
+            </div>
             <!-- 一番下に更新日 -->
             <p class="modal-dates" id="pvDates"></p>
         </div>

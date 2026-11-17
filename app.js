@@ -43,6 +43,8 @@ let ratingKeys = [];     // 評価として扱う列名の一覧（表示順）
 let currentTab = "にじさんじ";
 let viewMode = "year";   // year（年別） / title（ボイス別）
 let sortKey = "";        // 空なら発売日順。評価の列名が入るとその評価が高い順
+let reactionCounts = {}; // 「いいね」「気になる」の数（キー → { like, interest }）
+let reactionsReady = false; // 数を読み込めたら true（読めないときはボタンを出さない）
 
 const MAIN_AGENCIES = ["にじさんじ", "ホロスターズ"];
 // 未聴のボイスに付ける印（カードとポップアップで共通）
@@ -70,6 +72,12 @@ function escapeHtml(value) {
 // ライバー名の文字列を配列にする（複数人は「、」区切り。古いデータの「,」区切りにも対応）
 function splitLivers(text) {
     return normalize(text).split(/[、,]/).map(s => s.trim()).filter(Boolean);
+}
+
+// ボイスを見分けるキー：タイトル｜ライバー｜発売年｜発売月
+// GAS（reactions.gs）の reactKey_ と同じ作り方にしてある（どちらかを変えたら、もう片方も同じように変える）
+function voiceKey(title, liverText, year, month) {
+    return [normalize(title), splitLivers(liverText).join("、"), normalize(year), normalize(month)].join("|");
 }
 
 // ---------- CSV の読み込み ----------
@@ -157,6 +165,7 @@ async function loadData() {
                 const ratings = {};
                 ratingKeys.forEach(k => { ratings[k] = toRating(r[k]); });
                 return {
+                    key: voiceKey(r.title, r.liverName, r.releaseYear, r.releaseMonth),
                     title: normalize(r.title),
                     livers: splitLivers(r.liverName),
                     agency: normalize(r.agency) || "その他",
@@ -182,6 +191,7 @@ async function loadData() {
         buildSortOptions();
         updateLiverOptions();
         renderGallery();
+        loadReactions(); // 「いいね」「気になる」の数は後から読み込む（一覧の表示を待たせないため）
     } catch (e) {
         console.error(e);
         showMessage("データの読み込みに失敗しました。時間をおいて再読み込みしてください。");
@@ -318,6 +328,7 @@ function createCard(voice) {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "card";
+    card.dataset.key = voice.key; // あとで数だけを書き換えるための目印
     card.innerHTML = `
         <span class="card-top">
             <span class="liver-name">👤 ${escapeHtml(voice.livers.join("、"))}</span>
@@ -325,6 +336,7 @@ function createCard(voice) {
         </span>
         <span class="rating-list">${ratingsHtml(voice)}</span>
         ${voice.review ? '<span class="has-review">📝 感想あり</span>' : ""}
+        <span class="card-reaction-slot">${reactionCountHtml(voice)}</span>
     `;
     card.addEventListener("click", () => openModal(voice));
     return card;
@@ -426,6 +438,124 @@ document.addEventListener("click", e => {
     closeOthers(".accordion");
 });
 
+// ---------- いいね・気になる ----------
+
+// 視聴済みのボイスは「いいね」、未聴のボイスは「気になる」
+function reactionType(voice) {
+    return voice.listened ? "like" : "interest";
+}
+
+function reactionCount(voice) {
+    return (reactionCounts[voice.key] || {})[reactionType(voice)] || 0;
+}
+
+// このブラウザで押したかどうかを覚えておく（使えないブラウザでも動くように try で囲む）
+const MINE_STORAGE_KEY = "voiceReactions";
+function loadMine() {
+    try { return new Set(JSON.parse(localStorage.getItem(MINE_STORAGE_KEY) || "[]")); } catch (e) { return new Set(); }
+}
+function saveMine(set) {
+    try { localStorage.setItem(MINE_STORAGE_KEY, JSON.stringify([...set])); } catch (e) { /* 覚えられなくても動きは続ける */ }
+}
+let mine = loadMine(); // 「種類:キー」の形で入れる
+
+function isMine(voice) {
+    return mine.has(`${reactionType(voice)}:${voice.key}`);
+}
+
+// カードに出す数（1以上のときだけ）
+function reactionCountHtml(voice) {
+    if (!reactionsReady) return "";
+    const count = reactionCount(voice);
+    if (count < 1) return "";
+    const icon = reactionType(voice) === "like" ? "♡" : "👀";
+    const label = reactionType(voice) === "like" ? "いいね" : "気になる";
+    return `<span class="card-reaction" aria-label="${label} ${count}">${icon} ${count}</span>`;
+}
+
+// 一覧は作り直さずに、カードの数の部分だけを書き換える（開いているタイトルが閉じないように）
+function updateCardReactions() {
+    const byKey = new Map(allVoices.map(v => [v.key, v]));
+    document.querySelectorAll(".card[data-key]").forEach(card => {
+        const voice = byKey.get(card.dataset.key);
+        const slot = card.querySelector(".card-reaction-slot");
+        if (voice && slot) slot.innerHTML = reactionCountHtml(voice);
+    });
+}
+
+// GAS の受け口を呼ぶ
+async function callReactions(params) {
+    const url = (window.SITE_CONFIG || {}).reactionsApiUrl;
+    const res = await fetch(`${url}?${new URLSearchParams(params)}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(`通信に失敗しました（${res.status}）`);
+    const body = await res.json();
+    if (!body.ok) throw new Error(body.error || "うまくいきませんでした");
+    return body;
+}
+
+// 全部の数を読み込む
+async function loadReactions() {
+    if (!(window.SITE_CONFIG || {}).reactionsApiUrl) return; // URL がなければボタンは出さない
+    try {
+        reactionCounts = (await callReactions({ action: "list" })).counts || {};
+        reactionsReady = true;
+        updateCardReactions();
+        if (currentVoice) paintReactionButton(currentVoice); // 読み込み中にポップアップを開いていた場合
+    } catch (e) {
+        console.warn("いいね・気になるの数を読み込めませんでした", e);
+    }
+}
+
+// ポップアップのボタンの見た目を、今の状態に合わせる
+function paintReactionButton(voice) {
+    const box = document.getElementById("pvReaction");
+    box.hidden = !reactionsReady;
+    if (!reactionsReady) return;
+    const btn = document.getElementById("reactionBtn");
+    const like = reactionType(voice) === "like";
+    const pressed = isMine(voice);
+    const label = like ? (pressed ? "♥ いいね済み" : "♡ いいね") : (pressed ? "👀 気になる済み" : "👀 気になる");
+    btn.textContent = `${label}　${reactionCount(voice)}`;
+    btn.classList.toggle("pressed", pressed);
+    btn.setAttribute("aria-pressed", String(pressed));
+}
+
+let currentVoice = null; // 今ポップアップで開いているボイス
+
+// ボタンを押したとき：押していなければ +1、押していれば -1（取り消し）
+async function toggleReaction() {
+    const voice = currentVoice;
+    if (!voice) return;
+    const btn = document.getElementById("reactionBtn");
+    const msg = document.getElementById("reactionMsg");
+    const type = reactionType(voice);
+    const id = `${type}:${voice.key}`;
+    const wasMine = mine.has(id);
+    const before = Object.assign({ like: 0, interest: 0 }, reactionCounts[voice.key]);
+
+    // 先に見た目を変えておき、失敗したら元に戻す
+    reactionCounts[voice.key] = Object.assign({}, before, { [type]: Math.max(0, before[type] + (wasMine ? -1 : 1)) });
+    if (wasMine) mine.delete(id); else mine.add(id);
+    msg.textContent = "";
+    btn.disabled = true;
+    paintReactionButton(voice);
+
+    try {
+        const result = await callReactions({ action: "react", key: voice.key, type: type, delta: wasMine ? -1 : 1 });
+        reactionCounts[voice.key] = { like: result.like, interest: result.interest };
+        saveMine(mine);
+    } catch (e) {
+        console.warn(e);
+        reactionCounts[voice.key] = before;
+        if (wasMine) mine.add(id); else mine.delete(id);
+        msg.textContent = "うまく送れませんでした。時間をおいてもう一度押してください。";
+    } finally {
+        btn.disabled = false;
+        if (currentVoice === voice) paintReactionButton(voice);
+        updateCardReactions(); // カードの数も新しくする
+    }
+}
+
 // ---------- ポップアップ ----------
 
 // ポップアップを開いているあいだ、後ろの一覧が動かないようにする
@@ -448,6 +578,9 @@ function unlockScroll() {
 }
 
 function openModal(voice) {
+    currentVoice = voice;
+    document.getElementById("reactionMsg").textContent = "";
+    paintReactionButton(voice);
     document.getElementById("pvTitle").textContent = voice.title;
     document.getElementById("pvLiver").textContent = `👤 ${voice.livers.join("、")}`;
     document.getElementById("pvListen").innerHTML = voice.listened ? "" : UNLISTENED_BADGE;
@@ -475,6 +608,7 @@ function closeModal() {
 }
 
 document.getElementById("closePublicModal").addEventListener("click", closeModal);
+document.getElementById("reactionBtn").addEventListener("click", toggleReaction);
 // 「ネタバレ注意」のボタンを押すと、詳細を表示する（もう一度押すと隠す）
 document.getElementById("spoilerBtn").addEventListener("click", () => {
     const spoiler = document.getElementById("pvSpoiler");

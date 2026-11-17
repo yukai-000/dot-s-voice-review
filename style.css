@@ -118,6 +118,17 @@ body.scroll-locked { position: fixed; left: 0; right: 0; overflow: hidden; }
 .spoiler-body { display: none; margin-top: 12px; color: #555; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
 .spoiler.open .spoiler-body { display: block; }
 
+/* いいね・気になる */
+.reaction { margin-top: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.reaction[hidden] { display: none; }
+.reaction-btn { padding: 8px 16px; border: 1px solid var(--pink); border-radius: 4px; background: #fff; color: var(--pink-dark); font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.reaction-btn:hover { background: var(--pink-bg); }
+.reaction-btn.pressed { background: var(--pink); border-color: var(--pink); color: #fff; }
+.reaction-btn:disabled { opacity: 0.6; cursor: default; }
+.reaction-msg { color: #c0504d; font-size: 0.8rem; }
+.reaction-msg:empty { display: none; }
+.card-reaction { display: block; margin-top: 8px; font-size: 0.8rem; color: var(--pink-dark); }
+
 .message { color: var(--text-sub); }
 
 /* ---------- 上に戻るボタン ---------- */

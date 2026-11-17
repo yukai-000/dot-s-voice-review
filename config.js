@@ -12,4 +12,7 @@ window.SITE_CONFIG = {
 
   // 「livers」シートを CSV 形式で公開した URL
   liversCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcj4Gpa4Ri2M8W18IPrBcwguKQ86gn9OSSKfwDv5aueZjMT7gRS-snaPKkdfZ0ToAkeN4phlysnpER/pub?gid=2&single=true&output=csv",
+
+  // 「いいね」「気になる」の数を数える GAS（ウェブアプリ）の URL。空ならボタンを出さない
+  reactionsApiUrl: "",
 };
